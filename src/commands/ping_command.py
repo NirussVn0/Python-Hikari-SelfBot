@@ -11,9 +11,9 @@ from typing import Optional
 
 import discord
 
-from ..core.base_command import BaseCommand
-from ..core.types import CommandConfig, CommandExecutionResult
-from ..core.exceptions import CommandError
+from core.base_command import BaseCommand
+from core.types import CommandConfig, CommandExecutionResult
+from core.exceptions import CommandError
 
 
 class PingCommand(BaseCommand):

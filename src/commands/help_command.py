@@ -6,14 +6,17 @@ and their descriptions with improved formatting, categorization, and
 additional features compared to the original TypeScript implementation.
 """
 
+import asyncio
+import logging
 from typing import Dict, List, Optional
 
 import discord
 
-from ..core.base_command import BaseCommand
-from ..core.interfaces import ICommand, ICommandRegistry
-from ..core.types import CommandConfig, CommandExecutionResult
-from ..core.exceptions import CommandError
+from core.base_command import BaseCommand
+from core.interfaces import ICommand, ICommandRegistry
+from core.types import CommandConfig, CommandExecutionResult
+from core.exceptions import CommandError
+from utils.formatters import format_command_config, format_duration
 
 
 class HelpCommand(BaseCommand):

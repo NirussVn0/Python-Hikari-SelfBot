@@ -5,10 +5,10 @@ from typing import Dict, Optional
 
 import discord
 
-from ..core.exceptions import ValidationError
-from ..core.interfaces import IBotStats
-from ..core.types import BotStats, ConnectionStatus, CommandMetrics
-from ..config.logging import StructuredLogger
+from core.exceptions import ValidationError
+from core.interfaces import IBotStats
+from core.types import BotStats, ConnectionStatus, CommandMetrics
+from config.logging import StructuredLogger
 
 
 class BotStatsService(IBotStats):

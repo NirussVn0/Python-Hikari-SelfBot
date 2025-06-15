@@ -14,14 +14,11 @@ Self-bots violate Discord's Terms of Service and can result in account terminati
 ## 🧪 **Features**
 
 - Built with Python
+- Python 3.9 or higher
+- Poetry (recommended) or pip
 - Command in COMMAND.md
 
 ## 📦 **Installation**
-
-### **Prerequisites**
-
-- Python 3.9 or higher
-- Poetry (recommended) or pip
 
 ### **Clone the Repository**
 

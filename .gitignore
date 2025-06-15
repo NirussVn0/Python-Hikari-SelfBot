@@ -51,4 +51,5 @@ input.txt
 *.temp
 
 #readme
-*.txt
+**/__pycache__/
+*.pyc

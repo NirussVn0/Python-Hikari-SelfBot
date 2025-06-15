@@ -2,9 +2,9 @@ import asyncio
 import logging
 from typing import Dict, List, Optional, Set
 
-from ..core.exceptions import CommandError, ValidationError
-from ..core.interfaces import ICommand, ICommandRegistry
-from ..config.logging import StructuredLogger
+from core.exceptions import CommandError, ValidationError
+from core.interfaces import ICommand, ICommandRegistry
+from config.logging import StructuredLogger
 
 
 class CommandRegistry(ICommandRegistry):

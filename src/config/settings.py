@@ -13,7 +13,7 @@ from typing import List, Optional
 from pydantic import Field, validator
 from pydantic_settings import BaseSettings
 
-from ..core.exceptions import ConfigurationError
+from core.exceptions import ConfigurationError
 
 
 class Settings(BaseSettings):

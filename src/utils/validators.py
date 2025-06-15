@@ -5,10 +5,10 @@ from typing import Dict, Optional, Tuple
 import aiohttp
 import asyncio
 
-from ..core.exceptions import ValidationError
-from ..core.interfaces import ITokenValidator
-from ..core.types import TokenInfo
-from ..config.logging import StructuredLogger
+from core.exceptions import ValidationError
+from core.interfaces import ITokenValidator
+from core.types import TokenInfo
+from config.logging import StructuredLogger
 
 
 class TokenValidator(ITokenValidator):

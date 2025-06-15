@@ -11,9 +11,9 @@ All services follow SOLID principles and provide clean interfaces
 for interaction with other components.
 """
 
-from .command_registry import CommandRegistry
-from .bot_stats import BotStatsService
-from .discord_service import DiscordService
+from services.command_registry import CommandRegistry
+from services.bot_stats import BotStatsService
+from services.discord_service import DiscordService
 
 __all__ = [
     "CommandRegistry",

@@ -1,15 +1,16 @@
 import asyncio
+import logging
 import time
-from typing import Optional
+from typing import Dict, List, Optional
 
 import discord
 
-from ..config.logging import StructuredLogger
-from ..config.settings import Settings
-from ..core.exceptions import ConnectionError, CommandError
-from ..core.interfaces import ICommand, ICommandRegistry, IDiscordService
-from ..services.bot_stats import BotStatsService
-from ..services.command_registry import CommandRegistry
+from config.logging import StructuredLogger
+from config.settings import Settings
+from core.exceptions import ConnectionError, CommandError
+from core.interfaces import ICommand, ICommandRegistry, IDiscordService
+from services.bot_stats import BotStatsService
+from services.command_registry import CommandRegistry
 
 
 class DiscordService(IDiscordService):

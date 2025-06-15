@@ -7,7 +7,7 @@ from pathlib import Path
 # Add src to path for development
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
-from discord_selfbot.main import run
+from main import run
 
 if __name__ == "__main__":
     print("🐍 Starting Discord Self-Bot Python Implementation...")

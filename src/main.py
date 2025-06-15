@@ -11,14 +11,14 @@ import signal
 import sys
 from typing import Optional
 
-from .config.logging import setup_logging, get_logger
-from .config.settings import get_settings, Settings
-from .core.exceptions import DiscordSelfBotError, ConfigurationError
-from .services.discord_service import DiscordService
-from .services.command_registry import CommandRegistry
-from .services.bot_stats import BotStatsService
-from .commands.ping_command import PingCommand
-from .commands.help_command import HelpCommand
+from config.logging import setup_logging, get_logger
+from config.settings import get_settings, Settings
+from core.exceptions import DiscordSelfBotError, ConfigurationError
+from services.discord_service import DiscordService
+from services.command_registry import CommandRegistry
+from services.bot_stats import BotStatsService
+from commands.ping_command import PingCommand
+from commands.help_command import HelpCommand
 
 
 class DiscordSelfBot:
