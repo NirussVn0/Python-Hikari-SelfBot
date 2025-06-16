@@ -5,10 +5,18 @@ from typing import Dict, Optional, Tuple
 import aiohttp
 import asyncio
 
-from core.exceptions import ValidationError
-from core.interfaces import ITokenValidator
-from core.types import TokenInfo
-from config.logging import StructuredLogger
+try:
+    # Try relative imports first (for package execution)
+    from ..core.exceptions import ValidationError
+    from ..core.interfaces import ITokenValidator
+    from ..core.types import TokenInfo
+    from ..config.logging import StructuredLogger
+except ImportError:
+    # Fall back to absolute imports (for direct execution via run_bot.py)
+    from core.exceptions import ValidationError
+    from core.interfaces import ITokenValidator
+    from core.types import TokenInfo
+    from config.logging import StructuredLogger
 
 
 class TokenValidator(ITokenValidator):

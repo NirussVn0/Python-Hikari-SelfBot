@@ -50,6 +50,9 @@ input.txt
 *.tmp
 *.temp
 
+
 #readme
 **/__pycache__/
 *.pyc
+
+docs/*

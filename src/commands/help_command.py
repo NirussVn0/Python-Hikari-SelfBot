@@ -1,10 +1,4 @@
-"""
-Help command implementation with enhanced formatting and features.
-
-This module provides the HelpCommand class that displays available commands
-and their descriptions with improved formatting, categorization, and
-additional features compared to the original TypeScript implementation.
-"""
+"""Help command implementation with enhanced formatting and categorization."""
 
 import asyncio
 import logging
@@ -20,56 +14,25 @@ from utils.formatters import format_command_config, format_duration
 
 
 class HelpCommand(BaseCommand):
-    """
-    Help command implementation with enhanced formatting and features.
-    
-    This command displays available commands and their descriptions with
-    several enhancements over the original TypeScript implementation:
-    
-    - Improved visual formatting with emojis and sections
-    - Command categorization (Utility, Fun, etc.)
-    - Command status indicators (enabled/disabled)
-    - Statistics and usage information
-    - Detailed help for specific commands
-    - Enhanced error handling
-    
-    Features:
-    - Rich text formatting with emojis
-    - Command categorization and grouping
-    - Status indicators for each command
-    - Optional detailed help for specific commands
-    - Performance and usage statistics
-    """
-    
+    """Help command with enhanced formatting, categorization, and detailed command information."""
+
     def __init__(self, command_registry: ICommandRegistry) -> None:
-        """
-        Initialize the help command.
-        
-        Args:
-            command_registry: The command registry service for accessing commands
-        """
         super().__init__(
             command_name="help",
-            config=CommandConfig(
-                enabled=True,
-                cooldown=2000,  # 2 second cooldown
-            )
+            config=CommandConfig(enabled=True, cooldown=2000)
         )
         self.command_registry = command_registry
     
     @property
     def name(self) -> str:
-        """The name of the command."""
         return "help"
-    
+
     @property
     def description(self) -> str:
-        """Description of what the command does."""
         return "Shows available commands and their descriptions with enhanced formatting"
-    
+
     @property
     def trigger(self) -> str:
-        """The trigger text that activates this command."""
         return ".help"
     
     async def execute_command(self, message: discord.Message) -> CommandExecutionResult:

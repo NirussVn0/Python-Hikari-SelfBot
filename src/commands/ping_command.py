@@ -1,10 +1,4 @@
-"""
-Ping command implementation with enhanced latency tracking.
-
-This module provides the PingCommand class that responds with pong and
-detailed WebSocket latency information, including enhanced metrics
-and performance tracking.
-"""
+"""Ping command implementation with enhanced latency tracking."""
 
 import time
 from typing import Optional
@@ -17,94 +11,44 @@ from core.exceptions import CommandError
 
 
 class PingCommand(BaseCommand):
-    """
-    Ping command implementation with enhanced latency tracking.
-    
-    This command responds with "pong" and provides detailed WebSocket
-    latency information. It includes enhanced metrics compared to the
-    original TypeScript implementation:
-    
-    - WebSocket ping (latency to Discord)
-    - Response time (command execution time)
-    - Connection quality indicators
-    - Enhanced formatting and emoji indicators
-    
-    Features:
-    - Accurate latency measurement
-    - Connection quality assessment
-    - Enhanced visual feedback
-    - Performance metrics tracking
-    """
-    
+    """Ping command with enhanced latency tracking and connection quality indicators."""
+
     def __init__(self, client: discord.Client) -> None:
-        """
-        Initialize the ping command.
-        
-        Args:
-            client: The Discord client instance for latency measurement
-        """
         super().__init__(
             command_name="ping",
-            config=CommandConfig(
-                enabled=True,
-                cooldown=1000,  # 1 second cooldown
-            )
+            config=CommandConfig(enabled=True, cooldown=1000)
         )
         self.client = client
     
     @property
     def name(self) -> str:
-        """The name of the command."""
         return "ping"
-    
+
     @property
     def description(self) -> str:
-        """Description of what the command does."""
         return "Responds with pong and WebSocket latency information"
-    
+
     @property
     def trigger(self) -> str:
-        """The trigger text that activates this command."""
         return ".ping"
     
     async def execute_command(self, message: discord.Message) -> CommandExecutionResult:
-        """
-        Execute the ping command.
-        
-        This method measures WebSocket latency and responds with detailed
-        connection information including visual indicators for connection quality.
-        
-        Args:
-            message: The Discord message that triggered the command
-            
-        Returns:
-            CommandExecutionResult: Result containing pong response and latency data
-            
-        Raises:
-            CommandError: If latency measurement fails
-        """
+        """Execute the ping command with latency measurement."""
         try:
-            # Measure WebSocket latency
             ws_latency = await self._get_websocket_latency()
-            
-            # Measure response time
             start_time = time.time()
-            
-            # Create response message with enhanced formatting
+
             response = self._format_response(ws_latency)
-            
-            # Edit the original message with the response
             await message.edit(response)
-            
-            # Calculate total response time
+
             response_time = (time.time() - start_time) * 1000
-            
+
             self.logger.debug(
-                f"Ping command executed successfully",
+                "Ping command executed successfully",
                 ws_latency=ws_latency,
                 response_time=response_time
             )
-            
+
             return CommandExecutionResult(
                 success=True,
                 response=response,
@@ -116,7 +60,7 @@ class PingCommand(BaseCommand):
                     "client_ready": self.client.is_ready(),
                 }
             )
-            
+
         except Exception as error:
             self.logger.error(f"Failed to execute ping command: {error}")
             raise CommandError(

@@ -13,10 +13,15 @@ Self-bots violate Discord's Terms of Service and can result in account terminati
 
 ## 🧪 **Features**
 
-- Built with Python
-- Python 3.9 or higher
-- Poetry (recommended) or pip
-- Command in COMMAND.md
+- **Requires Python 3.9 or higher:** Leverages the latest language features.
+- **100% Type Hints:** Fully type-annotated codebase, validated with `mypy`.
+- **Advanced Metrics & Analytics:** Gain insights into bot activity and performance.
+- **Robust Error Handling:** Improved stability and easier debugging.
+- **Rate Limiting:** Prevents abuse and respects Discord API limits.
+- **Secure Logging:** No sensitive data is ever logged.
+- **Token Validation:** Built-in validation against the Discord API.
+- **Command Set:** See [COMMAND.md](COMMAND.md) for available commands.
+- **Flexible Installation:** Use Poetry (recommended) or pip.
 
 ## 📦 **Installation**
 

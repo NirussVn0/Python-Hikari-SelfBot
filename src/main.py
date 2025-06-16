@@ -1,10 +1,4 @@
-"""
-Main application entry point for the Discord self-bot.
-
-This module provides the main entry point and application lifecycle management
-for the Discord self-bot, including service initialization, command registration,
-and graceful shutdown handling.
-"""
+"""Main application entry point for the Discord self-bot."""
 
 import asyncio
 import signal
@@ -14,6 +8,7 @@ from typing import Optional
 from config.logging import setup_logging, get_logger
 from config.settings import get_settings, Settings
 from core.exceptions import DiscordSelfBotError, ConfigurationError
+from core.event_loop import setup_async_environment, get_async_performance_info
 from services.discord_service import DiscordService
 from services.command_registry import CommandRegistry
 from services.bot_stats import BotStatsService
@@ -22,71 +17,33 @@ from commands.help_command import HelpCommand
 
 
 class DiscordSelfBot:
-    """
-    Main application class for the Discord self-bot.
-    
-    This class manages the application lifecycle, service initialization,
-    and coordination between different components of the bot.
-    
-    Features:
-    - Service lifecycle management
-    - Command registration and setup
-    - Graceful shutdown handling
-    - Error handling and recovery
-    - Configuration management
-    """
-    
+    """Main application class for the Discord self-bot."""
+
     def __init__(self, settings: Optional[Settings] = None) -> None:
-        """
-        Initialize the Discord self-bot application.
-        
-        Args:
-            settings: Application settings (will be loaded if not provided)
-        """
-        # Load settings
         self.settings = settings or get_settings()
-        
-        # Setup logging
         setup_logging(self.settings)
         self.logger = get_logger("main")
-        
-        # Initialize services
+
         self.command_registry = CommandRegistry()
         self.discord_service: Optional[DiscordService] = None
         self.bot_stats: Optional[BotStatsService] = None
-        
-        # Shutdown handling
+
         self._shutdown_event = asyncio.Event()
         self._setup_signal_handlers()
-        
+
         self.logger.info("Discord self-bot application initialized")
     
     async def start(self) -> None:
-        """
-        Start the Discord self-bot application.
-        
-        This method initializes all services, registers commands, and starts
-        the Discord client connection.
-        
-        Raises:
-            DiscordSelfBotError: If startup fails
-        """
+        """Start the Discord self-bot application."""
         try:
             self.logger.info("🚀 Starting Discord self-bot...")
-            
-            # Display startup information
             await self._display_startup_info()
-            
-            # Initialize services
             await self._initialize_services()
-            
-            # Register commands
             await self._register_commands()
-            
-            # Start Discord service
+
             self.logger.info("🔗 Connecting to Discord...")
             await self.discord_service.start()
-            
+
         except Exception as e:
             self.logger.error(f"❌ Failed to start Discord self-bot: {e}")
             await self._cleanup()
@@ -96,26 +53,17 @@ class DiscordSelfBot:
             ) from e
     
     async def stop(self) -> None:
-        """
-        Stop the Discord self-bot application.
-        
-        This method gracefully shuts down all services and cleans up resources.
-        """
+        """Stop the Discord self-bot application."""
         try:
             self.logger.info("🛑 Stopping Discord self-bot...")
-            
-            # Signal shutdown
             self._shutdown_event.set()
-            
-            # Stop Discord service
+
             if self.discord_service:
                 await self.discord_service.stop()
-            
-            # Cleanup resources
+
             await self._cleanup()
-            
             self.logger.info("✅ Discord self-bot stopped successfully")
-            
+
         except Exception as e:
             self.logger.error(f"❌ Error during shutdown: {e}")
             raise
@@ -152,8 +100,10 @@ class DiscordSelfBot:
             stats = await self.command_registry.get_stats()
             self.logger.info(
                 f"✅ Registered {stats['total_commands']} commands successfully",
-                total_commands=stats['total_commands'],
-                enabled_commands=stats['enabled_commands']
+                extra={
+                    'total_commands': stats['total_commands'],
+                    'enabled_commands': stats['enabled_commands']
+                }
             )
             
         except Exception as e:
@@ -168,8 +118,17 @@ class DiscordSelfBot:
         self.logger.info(f"📊 Environment: {self.settings.environment}")
         self.logger.info(f"🐛 Debug Mode: {self.settings.debug}")
         self.logger.info(f"📝 Log Level: {self.settings.get_effective_log_level()}")
+
+        # Display async performance info
+        perf_info = get_async_performance_info()
+        loop_info = perf_info["event_loop"]
+        if loop_info["is_uvloop"]:
+            self.logger.info("⚡ Event Loop: uvloop (high performance)")
+        else:
+            self.logger.info("🔄 Event Loop: asyncio (standard)")
+
         self.logger.info("=" * 60)
-        
+
         # Display warnings
         self.logger.warning("⚠️ WARNING: Self-bots violate Discord's Terms of Service")
         self.logger.warning("⚠️ This implementation is for educational purposes only!")
@@ -286,16 +245,17 @@ async def main() -> None:
 
 def run() -> None:
     try:
-        # Use uvloop if available for better performance
-        try:
-            import uvloop
-            uvloop.install()
-        except ImportError:
-            pass
-        
+        # Setup optimal async environment
+        async_setup = setup_async_environment()
+
+        if async_setup["performance_optimized"]:
+            print("⚡ Using uvloop for enhanced async performance")
+        else:
+            print("🔄 Using standard asyncio event loop")
+
         # Run the main coroutine
         asyncio.run(main())
-        
+
     except KeyboardInterrupt:
         print("\n🛑 Application interrupted")
     except Exception as e:

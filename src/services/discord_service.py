@@ -9,8 +9,8 @@ from config.logging import StructuredLogger
 from config.settings import Settings
 from core.exceptions import ConnectionError, CommandError
 from core.interfaces import ICommand, ICommandRegistry, IDiscordService
-from services.bot_stats import BotStatsService
-from services.command_registry import CommandRegistry
+from .bot_stats import BotStatsService
+from .command_registry import CommandRegistry
 
 
 class DiscordService(IDiscordService):
@@ -24,7 +24,10 @@ class DiscordService(IDiscordService):
         self.logger = StructuredLogger("services.discord")
         
         # Initialize Discord client
+        intents = discord.Intents.default()
+        intents.message_content = True  # Enable message content intent for self-bot
         self.client = discord.Client(
+            intents=intents,
             heartbeat_timeout=settings.heartbeat_timeout,
             max_messages=None,  # Don't cache messages for self-bot
         )

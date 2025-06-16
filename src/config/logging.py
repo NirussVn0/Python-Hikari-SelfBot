@@ -249,32 +249,28 @@ class StructuredLogger:
         Returns:
             Formatted message
         """
-        metadata = {**self.context, **kwargs}
-        if metadata:
-            metadata_str = " | ".join(f"{k}={v}" for k, v in metadata.items())
-            return f"{message} | {metadata_str}"
         return message
     
     def debug(self, message: str, **kwargs: Any) -> None:
         """Log debug message with metadata."""
-        self.logger.debug(self._format_message(message, **kwargs))
+        self.logger.debug(message, extra={**self.context, **kwargs})
     
     def info(self, message: str, **kwargs: Any) -> None:
         """Log info message with metadata."""
-        self.logger.info(self._format_message(message, **kwargs))
+        self.logger.info(message, extra={**self.context, **kwargs})
     
     def warning(self, message: str, **kwargs: Any) -> None:
         """Log warning message with metadata."""
-        self.logger.warning(self._format_message(message, **kwargs))
+        self.logger.warning(message, extra={**self.context, **kwargs})
     
     def error(self, message: str, **kwargs: Any) -> None:
         """Log error message with metadata."""
-        self.logger.error(self._format_message(message, **kwargs))
+        self.logger.error(message, extra={**self.context, **kwargs})
     
     def critical(self, message: str, **kwargs: Any) -> None:
         """Log critical message with metadata."""
-        self.logger.critical(self._format_message(message, **kwargs))
+        self.logger.critical(message, extra={**self.context, **kwargs})
     
     def exception(self, message: str, **kwargs: Any) -> None:
         """Log exception message with metadata and traceback."""
-        self.logger.exception(self._format_message(message, **kwargs))
+        self.logger.exception(message, extra={**self.context, **kwargs})

@@ -9,7 +9,7 @@ description = "A high-performance Discord self-bot built with Python for educati
 authors = ["Your Name <your.email@example.com>"]
 readme = "README.md"
 license = "MIT"
-packages = [{include = "discord_selfbot", from = "src"}]
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -22,7 +22,8 @@ rich = "^13.7.0"
 asyncio-throttle = "^1.0.2"
 
 # Optional performance dependencies
-uvloop = {version = "^0.19.0", markers = "sys_platform != 'win32'"}
+# Note: uvloop temporarily disabled due to Python 3.13 compatibility issues
+# uvloop = {version = "^0.20.0", markers = "sys_platform != 'win32'", optional = true}
 orjson = "^3.9.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -36,6 +37,15 @@ isort = "^5.13.0"
 flake8 = "^6.1.0"
 flake8-docstrings = "^1.7.0"
 pre-commit = "^3.6.0"
+
+[tool.poetry.group.performance.dependencies]
+# High-performance async event loop (optional)
+# uvloop = {version = "^0.20.0", markers = "sys_platform != 'win32'"}
+# Note: uvloop currently incompatible with Python 3.13, will be re-enabled when support is added
+
+[tool.poetry.extras]
+# performance = ["uvloop"]
+# Note: Performance extras disabled until uvloop supports Python 3.13
 
 [tool.poetry.scripts]
 discord-selfbot = "discord_selfbot.main:main"

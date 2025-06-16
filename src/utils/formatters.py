@@ -1,5 +1,11 @@
 from typing import Dict, List, Optional, Any
-from core.types import CommandConfig
+
+try:
+    # Try relative imports first (for package execution)
+    from ..core.types import CommandConfig
+except ImportError:
+    # Fall back to absolute imports (for direct execution via run_bot.py)
+    from core.types import CommandConfig
 
 
 class MessageFormatter:
