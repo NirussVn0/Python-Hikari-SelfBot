@@ -1,9 +1,3 @@
-"""
-Unit tests for command implementations.
-
-This module contains comprehensive unit tests for all command classes,
-including the PingCommand and HelpCommand implementations.
-"""
 
 import pytest
 import pytest_asyncio

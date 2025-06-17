@@ -1,9 +1,3 @@
-"""
-Pytest configuration and shared fixtures for the test suite.
-
-This module provides common fixtures and configuration for all tests,
-including mock objects, test data, and setup/teardown functionality.
-"""
 
 import asyncio
 import pytest

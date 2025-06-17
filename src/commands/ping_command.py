@@ -70,15 +70,6 @@ class PingCommand(BaseCommand):
             ) from error
     
     async def _get_websocket_latency(self) -> float:
-        """
-        Get the WebSocket latency in milliseconds.
-        
-        Returns:
-            WebSocket latency in milliseconds
-            
-        Raises:
-            CommandError: If latency cannot be measured
-        """
         try:
             if not self.client.ws:
                 raise CommandError(
@@ -109,15 +100,6 @@ class PingCommand(BaseCommand):
             ) from e
     
     def _format_response(self, latency: float) -> str:
-        """
-        Format the ping response with enhanced visual indicators.
-        
-        Args:
-            latency: WebSocket latency in milliseconds
-            
-        Returns:
-            Formatted response string
-        """
         # Get connection quality assessment
         quality = self._assess_connection_quality(latency)
         emoji = self._get_quality_emoji(quality)
@@ -140,15 +122,6 @@ class PingCommand(BaseCommand):
         return response
     
     def _assess_connection_quality(self, latency: float) -> str:
-        """
-        Assess connection quality based on latency.
-        
-        Args:
-            latency: WebSocket latency in milliseconds
-            
-        Returns:
-            Connection quality string (excellent, good, fair, poor)
-        """
         if latency < 50:
             return "excellent"
         elif latency < 100:
@@ -159,15 +132,6 @@ class PingCommand(BaseCommand):
             return "poor"
     
     def _get_quality_emoji(self, quality: str) -> str:
-        """
-        Get emoji indicator for connection quality.
-        
-        Args:
-            quality: Connection quality string
-            
-        Returns:
-            Emoji string representing the quality
-        """
         quality_emojis = {
             "excellent": "🟢",
             "good": "🟡", 
@@ -177,12 +141,6 @@ class PingCommand(BaseCommand):
         return quality_emojis.get(quality, "⚪")
     
     def get_latency_stats(self) -> Optional[dict]:
-        """
-        Get current latency statistics.
-        
-        Returns:
-            Dictionary with latency information or None if unavailable
-        """
         try:
             if not self.client.ws:
                 return None

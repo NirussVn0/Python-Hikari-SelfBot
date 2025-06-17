@@ -3,16 +3,17 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "discord-selfbot-python"
+name = "hikari-selfbot-python"
 version = "1.0.0"
-description = "A high-performance Discord self-bot built with Python for educational purposes"
-authors = ["Your Name <your.email@example.com>"]
+description = "A high-performance Discord self-bot built with Python for educational purposes. See README.md for full details."
+authors = ["NirussVn0 <hikarisan.vn>"]
 readme = "README.md"
 license = "MIT"
 packages = [{include = "src"}]
+repository = "https://github.com/NirussVn0/Hikari-SelfBot"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9"
 discord-py = "^2.3.2"
 pydantic = "^2.5.0"
 pydantic-settings = "^2.1.0"
@@ -20,11 +21,9 @@ aiohttp = "^3.9.0"
 python-dotenv = "^1.0.0"
 rich = "^13.7.0"
 asyncio-throttle = "^1.0.2"
-
-# Optional performance dependencies
-# Note: uvloop temporarily disabled due to Python 3.13 compatibility issues
-# uvloop = {version = "^0.20.0", markers = "sys_platform != 'win32'", optional = true}
 orjson = "^3.9.0"
+# uvloop temporarily disabled due to Python 3.13 compatibility issues
+# uvloop = {version = "^0.20.0", markers = "sys_platform != 'win32'", optional = true}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.0"
@@ -39,7 +38,6 @@ flake8-docstrings = "^1.7.0"
 pre-commit = "^3.6.0"
 
 [tool.poetry.group.performance.dependencies]
-# High-performance async event loop (optional)
 # uvloop = {version = "^0.20.0", markers = "sys_platform != 'win32'"}
 # Note: uvloop currently incompatible with Python 3.13, will be re-enabled when support is added
 
@@ -48,8 +46,8 @@ pre-commit = "^3.6.0"
 # Note: Performance extras disabled until uvloop supports Python 3.13
 
 [tool.poetry.scripts]
-discord-selfbot = "discord_selfbot.main:main"
-token-checker = "discord_selfbot.utils.validators:main"
+discord-selfbot = "src.main:main"
+validate-token = "src.utils.validators:main"
 
 [tool.black]
 line-length = 88
@@ -57,7 +55,6 @@ target-version = ['py39']
 include = '\.pyi?$'
 extend-exclude = '''
 /(
-  # directories
   \.eggs
   | \.git
   | \.hg
@@ -73,7 +70,7 @@ extend-exclude = '''
 profile = "black"
 multi_line_output = 3
 line_length = 88
-known_first_party = ["discord_selfbot"]
+known_first_party = ["src"]
 known_third_party = ["discord", "pydantic", "aiohttp"]
 
 [tool.mypy]

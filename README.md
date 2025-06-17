@@ -91,7 +91,9 @@ discord-selfbot validate-token
 
 ```bash
 # Run the bot
-python -m hikari_selfbot.main
+poetry run python -m run_bot
+# Or using pip
+python -m run_bot
 
 # Or using the CLI
 Hikari-SelfBot

@@ -1,10 +1,3 @@
-"""
-Logging configuration and setup.
-
-This module provides comprehensive logging configuration with support for
-structured logging, rich console output, and different log levels based
-on the application environment.
-"""
 
 import logging
 import logging.config
@@ -22,15 +15,7 @@ from .settings import Settings
 
 
 def setup_logging(settings: Optional[Settings] = None) -> None:
-    """
-    Setup application logging configuration.
-    
-    This function configures the logging system based on the application
-    settings, including log level, format, and handlers.
-    
-    Args:
-        settings: Application settings (will be loaded if not provided)
-    """
+
     if settings is None:
         from .settings import get_settings
         settings = get_settings()
@@ -65,17 +50,6 @@ def setup_logging(settings: Optional[Settings] = None) -> None:
 
 
 def _create_logging_config(settings: Settings, log_level: str) -> Dict[str, Any]:
-    """
-    Create logging configuration dictionary.
-    
-    Args:
-        settings: Application settings
-        log_level: Effective log level
-        
-    Returns:
-        Logging configuration dictionary
-    """
-    # Base configuration
     config = {
         "version": 1,
         "disable_existing_loggers": False,
@@ -179,18 +153,7 @@ def _create_logging_config(settings: Settings, log_level: str) -> Dict[str, Any]
 
 
 def get_logger(name: str) -> logging.Logger:
-    """
-    Get a logger instance with the specified name.
-    
-    This function provides a convenient way to get logger instances
-    with consistent naming conventions.
-    
-    Args:
-        name: Logger name (will be prefixed with 'discord_selfbot.')
-        
-    Returns:
-        Logger instance
-    """
+
     if not name.startswith("discord_selfbot."):
         name = f"discord_selfbot.{name}"
     
@@ -198,30 +161,12 @@ def get_logger(name: str) -> logging.Logger:
 
 
 class StructuredLogger:
-    """
-    Structured logger for enhanced logging with metadata.
-    
-    This class provides structured logging capabilities with support
-    for adding metadata and context to log messages.
-    """
     
     def __init__(self, name: str):
-        """
-        Initialize the structured logger.
-        
-        Args:
-            name: Logger name
-        """
         self.logger = get_logger(name)
         self.context: Dict[str, Any] = {}
     
     def add_context(self, **kwargs: Any) -> None:
-        """
-        Add context information to all log messages.
-        
-        Args:
-            **kwargs: Context key-value pairs
-        """
         self.context.update(kwargs)
     
     def remove_context(self, *keys: str) -> None:
@@ -239,16 +184,6 @@ class StructuredLogger:
         self.context.clear()
     
     def _format_message(self, message: str, **kwargs: Any) -> str:
-        """
-        Format message with context and additional metadata.
-        
-        Args:
-            message: Base log message
-            **kwargs: Additional metadata
-            
-        Returns:
-            Formatted message
-        """
         return message
     
     def debug(self, message: str, **kwargs: Any) -> None:

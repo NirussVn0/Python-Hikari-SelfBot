@@ -1,11 +1,3 @@
-"""
-Application settings and configuration management.
-
-This module provides comprehensive configuration management using Pydantic
-for validation and type safety. It handles environment variables, default
-values, and configuration validation.
-"""
-
 import os
 from functools import lru_cache
 from typing import List, Optional
@@ -17,16 +9,6 @@ from core.exceptions import ConfigurationError
 
 
 class Settings(BaseSettings):
-    """
-    Application settings with validation and type safety.
-    
-    This class uses Pydantic to provide type-safe configuration management
-    with automatic validation and environment variable loading.
-    
-    All settings can be overridden via environment variables with the
-    DISCORD_SELFBOT_ prefix.
-    """
-    
     # Discord Configuration
     discord_token: str = Field(
         ...,
@@ -146,18 +128,6 @@ class Settings(BaseSettings):
     
     @validator("discord_token")
     def validate_discord_token(cls, v: str) -> str:
-        """
-        Validate Discord token format.
-        
-        Args:
-            v: The token value
-            
-        Returns:
-            The validated token
-            
-        Raises:
-            ConfigurationError: If token format is invalid
-        """
         if not v:
             raise ConfigurationError(
                 "Discord token is required",
@@ -185,18 +155,6 @@ class Settings(BaseSettings):
     
     @validator("environment")
     def validate_environment(cls, v: str) -> str:
-        """
-        Validate environment setting.
-        
-        Args:
-            v: The environment value
-            
-        Returns:
-            The validated environment
-            
-        Raises:
-            ConfigurationError: If environment is invalid
-        """
         valid_environments = {"development", "production", "testing"}
         if v.lower() not in valid_environments:
             raise ConfigurationError(
@@ -208,18 +166,6 @@ class Settings(BaseSettings):
     
     @validator("log_level")
     def validate_log_level(cls, v: str) -> str:
-        """
-        Validate log level setting.
-        
-        Args:
-            v: The log level value
-            
-        Returns:
-            The validated log level
-            
-        Raises:
-            ConfigurationError: If log level is invalid
-        """
         valid_levels = {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}
         if v.upper() not in valid_levels:
             raise ConfigurationError(
@@ -231,18 +177,6 @@ class Settings(BaseSettings):
     
     @validator("allowed_users", "blocked_users")
     def validate_user_lists(cls, v: List[str]) -> List[str]:
-        """
-        Validate user ID lists.
-        
-        Args:
-            v: The user ID list
-            
-        Returns:
-            The validated user ID list
-            
-        Raises:
-            ConfigurationError: If user IDs are invalid
-        """
         for user_id in v:
             if not user_id.isdigit():
                 raise ConfigurationError(
@@ -268,26 +202,11 @@ class Settings(BaseSettings):
         return self.environment == "testing"
     
     def get_effective_log_level(self) -> str:
-        """
-        Get the effective log level based on environment and debug settings.
-        
-        Returns:
-            The effective log level
-        """
         if self.debug or self.is_development:
             return "DEBUG"
         return self.log_level
     
     def validate_configuration(self) -> None:
-        """
-        Perform additional configuration validation.
-        
-        This method performs cross-field validation and checks for
-        configuration conflicts.
-        
-        Raises:
-            ConfigurationError: If configuration is invalid
-        """
         # Check for conflicting user lists
         allowed_set = set(self.allowed_users)
         blocked_set = set(self.blocked_users)
@@ -310,18 +229,6 @@ class Settings(BaseSettings):
 
 @lru_cache()
 def get_settings() -> Settings:
-    """
-    Get application settings with caching.
-    
-    This function creates and caches the settings instance to ensure
-    consistent configuration throughout the application.
-    
-    Returns:
-        Settings: The application settings instance
-        
-    Raises:
-        ConfigurationError: If configuration is invalid
-    """
     try:
         settings = Settings()
         settings.validate_configuration()
