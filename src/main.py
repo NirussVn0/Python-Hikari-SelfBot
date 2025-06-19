@@ -1,4 +1,4 @@
-"""Main application entry point for the Discord self-bot."""
+# Main application entry point for the Discord self-bot.
 
 import asyncio
 import signal
@@ -23,16 +23,13 @@ class DiscordSelfBot:
         self.settings = settings or get_settings()
         setup_logging(self.settings)
         self.logger = get_logger("main")
-
         self.command_registry = CommandRegistry()
         self.discord_service: Optional[DiscordService] = None
         self.bot_stats: Optional[BotStatsService] = None
-
         self._shutdown_event = asyncio.Event()
         self._setup_signal_handlers()
-
         self.logger.info("Discord self-bot application initialized")
-    
+
     async def start(self) -> None:
         """Start the Discord self-bot application."""
         try:
@@ -48,10 +45,9 @@ class DiscordSelfBot:
             self.logger.error(f"❌ Failed to start Discord self-bot: {e}")
             await self._cleanup()
             raise DiscordSelfBotError(
-                f"Application startup failed: {e}",
-                error_code="STARTUP_FAILED"
+                f"Application startup failed: {e}", error_code="STARTUP_FAILED"
             ) from e
-    
+
     async def stop(self) -> None:
         """Stop the Discord self-bot application."""
         try:
@@ -67,49 +63,48 @@ class DiscordSelfBot:
         except Exception as e:
             self.logger.error(f"❌ Error during shutdown: {e}")
             raise
-    
+
     async def _initialize_services(self) -> None:
         """Initialize all application services."""
         self.logger.info("⚙️ Initializing services...")
-        
+
         # Create Discord service with command registry
         self.discord_service = DiscordService(
-            settings=self.settings,
-            command_registry=self.command_registry
+            settings=self.settings, command_registry=self.command_registry
         )
-        
+
         # Get bot stats service from Discord service
         self.bot_stats = self.discord_service.bot_stats
-        
+
         self.logger.info("✅ Services initialized successfully")
-    
+
     async def _register_commands(self) -> None:
         """Register all available commands."""
         self.logger.info("📝 Registering commands...")
-        
+
         try:
             # Create command instances
             ping_command = PingCommand(self.discord_service.get_client())
             help_command = HelpCommand(self.command_registry)
-            
+
             # Register commands
             await self.discord_service.register_command(ping_command)
             await self.discord_service.register_command(help_command)
-            
+
             # Get registration statistics
             stats = await self.command_registry.get_stats()
             self.logger.info(
                 f"✅ Registered {stats['total_commands']} commands successfully",
                 extra={
-                    'total_commands': stats['total_commands'],
-                    'enabled_commands': stats['enabled_commands']
-                }
+                    "total_commands": stats["total_commands"],
+                    "enabled_commands": stats["enabled_commands"],
+                },
             )
-            
+
         except Exception as e:
             self.logger.error(f"❌ Failed to register commands: {e}")
             raise
-    
+
     async def _display_startup_info(self) -> None:
         """Display startup information and warnings."""
         self.logger.info("=" * 60)
@@ -134,56 +129,59 @@ class DiscordSelfBot:
         self.logger.warning("⚠️ This implementation is for educational purposes only!")
         self.logger.warning("⚠️ Use at your own risk!")
         self.logger.info("=" * 60)
-    
+
     async def _cleanup(self) -> None:
         """Cleanup resources and perform final tasks."""
         try:
             # Export final metrics if enabled
             if self.settings.enable_metrics and self.bot_stats:
                 metrics = await self.bot_stats.export_metrics()
-                self.logger.debug("Final metrics exported", **metrics.get("performance_summary", {}))
-            
+                self.logger.debug(
+                    "Final metrics exported", **metrics.get("performance_summary", {})
+                )
+
             self.logger.debug("Cleanup completed successfully")
-            
+
         except Exception as e:
             self.logger.error(f"Error during cleanup: {e}")
-    
+
     def _setup_signal_handlers(self) -> None:
         """Setup signal handlers for graceful shutdown."""
+
         def signal_handler(signum, frame):
             """Handle shutdown signals."""
             signal_name = signal.Signals(signum).name
             self.logger.info(f"Received {signal_name}, initiating graceful shutdown...")
-            
+
             # Set shutdown event
             if not self._shutdown_event.is_set():
                 self._shutdown_event.set()
-                
+
                 # Schedule shutdown coroutine
                 loop = asyncio.get_event_loop()
                 if loop.is_running():
                     loop.create_task(self.stop())
                 else:
                     asyncio.run(self.stop())
-        
+
         # Register signal handlers
         if sys.platform != "win32":
             signal.signal(signal.SIGINT, signal_handler)
             signal.signal(signal.SIGTERM, signal_handler)
-    
+
     @property
     def is_running(self) -> bool:
         """Check if the application is running."""
         return (
-            self.discord_service is not None and 
-            self.discord_service.is_running and
-            not self._shutdown_event.is_set()
+            self.discord_service is not None
+            and self.discord_service.is_running
+            and not self._shutdown_event.is_set()
         )
-    
+
     async def get_status(self) -> dict:
         """
         Get the current application status.
-        
+
         Returns:
             Dictionary with application status information
         """
@@ -193,47 +191,47 @@ class DiscordSelfBot:
             "environment": self.settings.environment,
             "debug_mode": self.settings.debug,
         }
-        
+
         if self.discord_service:
             service_status = await self.discord_service.get_service_status()
             status.update(service_status)
-        
+
         return status
 
 
 async def main() -> None:
     """
     Main entry point for the Discord self-bot application.
-    
+
     This function handles application startup, running, and shutdown
     with proper error handling and logging.
     """
     bot = None
-    
+
     try:
         # Load settings and validate configuration
         settings = get_settings()
-        
+
         # Create and start the bot
         bot = DiscordSelfBot(settings)
         await bot.start()
-        
+
         # Keep the application running until shutdown
         while bot.is_running:
             await asyncio.sleep(1)
-        
+
     except ConfigurationError as e:
         print(f"❌ Configuration Error: {e}")
         print("💡 Please check your .env file and configuration settings")
         sys.exit(1)
-        
+
     except KeyboardInterrupt:
         print("\n🛑 Shutdown requested by user")
-        
+
     except Exception as e:
         print(f"❌ Unexpected error: {e}")
         sys.exit(1)
-        
+
     finally:
         # Ensure cleanup
         if bot:
