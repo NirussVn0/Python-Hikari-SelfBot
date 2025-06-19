@@ -1,29 +1,23 @@
 from typing import Dict, List, Optional, Any
 
 try:
-    # Try relative imports first (for package execution)
     from ..core.types import CommandConfig
 except ImportError:
-    # Fall back to absolute imports (for direct execution via run_bot.py)
     from core.types import CommandConfig
 
 
 class MessageFormatter:
-
     @staticmethod
     def format_command_output(content: str, success: bool = True) -> str:
-        """Format standard command output with appropriate styling."""
-        prefix = "✅" if success else "❌"
+        prefix = "\u2705" if success else "\u274c"
         return f"{prefix} {content}"
     
     @staticmethod
     def format_code_block(content: str, language: str = "") -> str:
-        """Format content as a Discord code block with optional language."""
         return f"```{language}\n{content}\n```"
     
     @staticmethod
     def format_info_message(title: str, content: str) -> str:
-        """Format an information message with a title."""
         return f"**{title}**\n{content}"
 
 

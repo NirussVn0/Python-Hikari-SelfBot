@@ -4,6 +4,6 @@ from .discord_service import DiscordService
 
 __all__ = [
     "CommandRegistry",
-    "BotStatsService", 
+    "BotStatsService",
     "DiscordService",
 ]

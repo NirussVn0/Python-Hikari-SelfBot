@@ -142,7 +142,7 @@ async def main():
     """Main function for command-line usage."""
     if len(sys.argv) < 2:
         print("Usage: python validate_token.py <discord_token>")
-        print("Example: python validate_token.py MTM4MzQ5ODIxNDY5MDI1ODk1NA.GnU544.TUh33hKH9kjPBd14_4zULgSk-Y4xwdVyLGBq9A")
+        print("Example: python validate_token.py ")
         sys.exit(1)
     
     token = sys.argv[1]

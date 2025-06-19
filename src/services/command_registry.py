@@ -1,6 +1,5 @@
 import asyncio
-import logging
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional
 
 from core.exceptions import CommandError, ValidationError
 from core.interfaces import ICommand, ICommandRegistry
@@ -8,7 +7,6 @@ from config.logging import StructuredLogger
 
 
 class CommandRegistry(ICommandRegistry):
-
     def __init__(self) -> None:
         self.logger = StructuredLogger("services.command_registry")
         self._commands: Dict[str, ICommand] = {}
@@ -26,7 +24,7 @@ class CommandRegistry(ICommandRegistry):
             raise ValidationError(
                 "Command cannot be None",
                 field_name="command",
-                error_code="NULL_COMMAND"
+                error_code="NULL_COMMAND",
             )
 
         await self._validate_command(command)
@@ -39,7 +37,7 @@ class CommandRegistry(ICommandRegistry):
                         f"Overwriting command '{existing_command.name}' with '{command.name}'",
                         trigger=command.trigger,
                         existing_command=existing_command.name,
-                        new_command=command.name
+                        new_command=command.name,
                     )
 
                 if command.name in self._command_names:
@@ -49,29 +47,19 @@ class CommandRegistry(ICommandRegistry):
                             f"Command name '{command.name}' already exists with "
                             f"different trigger '{existing_command.trigger}'",
                             command_name=command.name,
-                            error_code="DUPLICATE_COMMAND_NAME"
+                            error_code="DUPLICATE_COMMAND_NAME",
                         )
 
                 self._commands[command.trigger] = command
                 self._command_names[command.name] = command
                 self._stats["total_registered"] += 1
 
-                self.logger.info(
-                    f"Registered command: {command.name}",
-                    command_name=command.name,
-                    trigger=command.trigger,
-                    total_commands=len(self._commands)
-                )
-
+                self.logger.info(f"Registered command: {command.name}", trigger=command.trigger)
             except Exception as e:
                 self._stats["registration_errors"] += 1
-                self.logger.error(
-                    f"Failed to register command {command.name}: {e}",
-                    command_name=command.name,
-                    error=str(e)
-                )
+                self.logger.error(f"Failed to register command: {command.name}", error=str(e))
                 raise
-    
+
     async def get_command(self, trigger: str) -> Optional[ICommand]:
         """Get a command by its trigger."""
         if not trigger:
@@ -97,7 +85,7 @@ class CommandRegistry(ICommandRegistry):
             return False
         async with self._lock:
             return trigger in self._commands
-    
+
     async def unregister(self, trigger: str) -> bool:
         """Unregister a command by trigger."""
         if not trigger:
@@ -115,7 +103,7 @@ class CommandRegistry(ICommandRegistry):
                     f"Unregistered command: {command.name}",
                     command_name=command.name,
                     trigger=trigger,
-                    total_commands=len(self._commands)
+                    total_commands=len(self._commands),
                 )
                 return True
             else:
@@ -128,8 +116,10 @@ class CommandRegistry(ICommandRegistry):
             command_count = len(self._commands)
             self._commands.clear()
             self._command_names.clear()
-            self.logger.info(f"Cleared {command_count} commands", cleared_count=command_count)
-    
+            self.logger.info(
+                f"Cleared {command_count} commands", cleared_count=command_count
+            )
+
     async def get_stats(self) -> Dict[str, any]:
         """Get command registry statistics."""
         async with self._lock:
@@ -138,8 +128,12 @@ class CommandRegistry(ICommandRegistry):
                 "total_commands": len(commands),
                 "triggers": list(self._commands.keys()),
                 "command_names": [cmd.name for cmd in commands],
-                "enabled_commands": len([cmd for cmd in commands if cmd.get_config().enabled]),
-                "disabled_commands": len([cmd for cmd in commands if not cmd.get_config().enabled]),
+                "enabled_commands": len(
+                    [cmd for cmd in commands if cmd.get_config().enabled]
+                ),
+                "disabled_commands": len(
+                    [cmd for cmd in commands if not cmd.get_config().enabled]
+                ),
                 "registration_stats": self._stats.copy(),
             }
 
@@ -151,10 +145,11 @@ class CommandRegistry(ICommandRegistry):
         async with self._lock:
             partial_lower = partial_trigger.lower()
             return [
-                command for trigger, command in self._commands.items()
+                command
+                for trigger, command in self._commands.items()
                 if partial_lower in trigger.lower()
             ]
-    
+
     async def get_commands_by_category(self) -> Dict[str, List[ICommand]]:
         """Get commands grouped by category."""
         async with self._lock:
@@ -178,58 +173,58 @@ class CommandRegistry(ICommandRegistry):
                     results["invalid"].append(command.name)
                     results["errors"].append(f"{command.name}: {str(e)}")
             return results
-    
+
     async def _validate_command(self, command: ICommand) -> None:
         """Validate a command implementation."""
-        if not hasattr(command, 'name') or not command.name:
+        if not hasattr(command, "name") or not command.name:
             raise ValidationError(
                 "Command must have a non-empty name",
                 field_name="name",
-                error_code="MISSING_NAME"
+                error_code="MISSING_NAME",
             )
 
-        if not hasattr(command, 'description') or not command.description:
+        if not hasattr(command, "description") or not command.description:
             raise ValidationError(
                 "Command must have a non-empty description",
                 field_name="description",
-                error_code="MISSING_DESCRIPTION"
+                error_code="MISSING_DESCRIPTION",
             )
 
-        if not hasattr(command, 'trigger') or not command.trigger:
+        if not hasattr(command, "trigger") or not command.trigger:
             raise ValidationError(
                 "Command must have a non-empty trigger",
                 field_name="trigger",
-                error_code="MISSING_TRIGGER"
+                error_code="MISSING_TRIGGER",
             )
 
-        if not hasattr(command, 'execute') or not callable(command.execute):
+        if not hasattr(command, "execute") or not callable(command.execute):
             raise ValidationError(
                 "Command must have an executable 'execute' method",
                 field_name="execute",
-                error_code="MISSING_EXECUTE_METHOD"
+                error_code="MISSING_EXECUTE_METHOD",
             )
 
-        if not command.trigger.startswith('.'):
+        if not command.trigger.startswith("."):
             raise ValidationError(
                 "Command trigger must start with '.'",
                 field_name="trigger",
                 field_value=command.trigger,
-                error_code="INVALID_TRIGGER_FORMAT"
+                error_code="INVALID_TRIGGER_FORMAT",
             )
-    
+
     def _categorize_command(self, command: ICommand) -> str:
         """Categorize a command based on its name."""
         name_lower = command.name.lower()
 
         categories = {
-            'Utility': {'ping', 'help', 'status', 'info', 'stats'},
-            'Fun': {'hurt', 'owo', 'meow', 'hentai', 'joke', 'meme'},
-            'Moderation': {'ban', 'kick', 'mute', 'warn', 'clear'},
-            'Information': {'user', 'server', 'channel', 'role'}
+            "Utility": {"ping", "help", "status", "info", "stats"},
+            "Fun": {"hurt", "owo", "meow", "hentai", "joke", "meme"},
+            "Moderation": {"ban", "kick", "mute", "warn", "clear"},
+            "Information": {"user", "server", "channel", "role"},
         }
 
         for category, commands in categories.items():
             if name_lower in commands:
                 return category
 
-        return 'Other'
+        return "Other"
