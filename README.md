@@ -1,4 +1,8 @@
-# Hikari Self-Bot with Python
+# Hikari Self-Bot with Python (Archived)
+
+> ⚠️ **[ARCHIVED]** This repository is no longer actively maintained as the project has been migrated from Python to [NestJS](https://nestjs.com/).  
+> 🗃️ This codebase is kept publicly available for **reference and educational purposes only**.  
+> 👉 Please refer to the new implementation if you’re looking for an up-to-date version.
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -7,9 +11,13 @@
 
 ### Author by NirussVn0
 
-⚠️ **WARNING: This project is for educational purposes only!**
-
+⚠️ **WARNING: This project is for educational purposes only!**  
 Self-bots violate Discord's Terms of Service and can result in account termination. Use this code only for learning purposes and testing in private servers where you have permission.
+
+## 🌐 **Available Languages**
+
+- [English](README.md)
+- [Tiếng Việt](README.vi.md)
 
 ## 🧪 **Features**
 
@@ -98,13 +106,13 @@ python -m run_bot
 # Or using the CLI
 Hikari-SelfBot
 ```
-
 ## 📄 **License**
 
-- This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-- **Remember: This is for educational purposes only. Self-bots violate Discord's ToS. Use responsibly! 🐍⚡**
+* This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+* **Remember: This is for educational purposes only. Self-bots violate Discord's ToS. Use responsibly! 🐍⚡**
 
-## 🤝 **Contribute**
+## 🤝 **Contribute & Contact**
 
-- Author: NirussVn0
-- Discord: hikarisan.vn
+* Author: NirussVn0
+* Discord suport: [hikariisan.vn](https://discord.gg/5Naa9X9W7f)
+* Email: [niruss.dev](mailto:work.niruss.dev@gmail.com)
